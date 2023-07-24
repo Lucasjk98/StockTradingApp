@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Portfolio, Transaction
+from .models import Position, Transaction, Balance
 
 # Register your models here.
-admin.site.register(Portfolio)   #new
+admin.site.register(Position)   #new
 admin.site.register(Transaction)
+admin.site.register(Balance)

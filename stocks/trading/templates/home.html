@@ -2,7 +2,18 @@
 
 
 {% block content %}
-<h1>{{apiCall.info.longName}}</h1><br/>
-Ticker Symbol: {{apiCall.info.underlyingSymbol}}<br/>
-Current Price: {{apiCall.info.currentPrice}}<br/>
+
+{% if apiCall %}
+    {% if apiCall == "Error..." %}
+        There was a problem with your ticker symbol, 
+        please try again...
+    {% else %}
+
+        <h1>{{apiCall.info.longName}}</h1><br/>
+        Ticker Symbol: {{apiCall.info.underlyingSymbol}}<br/>
+        Current Price: {{apiCall.info.currentPrice}}<br/>
+        
+    {% endif %}
+{% endif %}
+
 {% endblock %}

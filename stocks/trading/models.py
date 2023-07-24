@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Portfolio(models.Model):
+class Position(models.Model):
     asset = models.CharField(max_length=4)
     quantity = models.IntegerField(null=True)
 
@@ -17,6 +17,7 @@ class Transaction(models.Model):
     date = models.DateTimeField(null=True)
 
 
-
+class Balance(models.Model):
+    cash = models.IntegerField(default=500)
 
     
