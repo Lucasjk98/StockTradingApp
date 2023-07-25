@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import yfinance as yahooFinance
-from .models import Position
+from .models import Position, Balance, Transaction
+from django.contrib import messages
 
 # Create your views here.
 def home (request):
@@ -29,5 +30,52 @@ def portfolio(request):
     return render(request, 'portfolio.html', {'portfolio' : portfolio})
 
 def buySell(request):
+    if request.method == 'POST':
+        obj, created = Position.objects.get_or_create(asset = request.POST.get("asset"))
+        purchasedAmount = request.POST.get("quantity")
+        if obj.quantity:
+            obj.quantity += int(purchasedAmount)
+        else:
+            obj.quantity = purchasedAmount
 
-    return render(request, 'buySell.html')
+        
+
+
+        obj.save()
+
+        return redirect('portfolio')
+        
+
+    else:
+        return render(request, 'buySell.html', {})
+    
+def sellBuy(request):
+    if request.method == 'POST':
+        obj, created = Position.objects.get_or_create(asset = request.POST.get("asset"))
+        soldAmount = int(request.POST.get("quantity"))
+        previousAmount = int(obj.quantity)
+        print(soldAmount)
+        print(previousAmount)
+        if previousAmount == soldAmount:
+            obj.delete()
+            return redirect('portfolio')
+        
+        elif previousAmount < soldAmount:
+            print(soldAmount)
+            print(previousAmount)
+            errorMessage = "quantityError"
+            return render(request, 'buySell.html', {'errorMessage' : errorMessage, 'previousAmount': previousAmount})
+
+
+        
+        else:
+            obj.quantity -= int(soldAmount)
+            obj.save()
+            return redirect('portfolio')
+
+        
+        
+
+    
+    
+
