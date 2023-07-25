@@ -10,10 +10,12 @@
     {% else %}
 
         <h1>{{apiCall.info.longName}}</h1><br/>
-        Ticker Symbol: {{apiCall.info.underlyingSymbol}}<br/>
-        Current Price: {{apiCall.info.currentPrice}}<br/>
+        Ticker Symbol: {{apiCall.underlyingSymbol}}<br/>
+        Current Price: {{apiCall.currentPrice}}<br/>
         
     {% endif %}
+{% else %}
+    {{defaultMessage}}
 {% endif %}
 
 {% endblock %}

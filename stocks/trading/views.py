@@ -4,14 +4,16 @@ from .models import Position
 
 # Create your views here.
 def home (request):
-    ticker=request.POST['ticker'] 
-    stock_data = yahooFinance.Ticker(ticker)
-    try:
-        stock_info = stock_data.info
-    except:
-        apiCall = "Error..."
-    print("rendering now")
-    return render(request, 'home.html', {'apiCall' : apiCall})
+    if request.method == 'POST':
+        ticker=request.POST['ticker']
+        stock_data = yahooFinance.Ticker(ticker)
+        try:
+            apiCall= stock_data.info
+        except:
+            apiCall = "Error..."
+        return render(request, 'home.html', {'apiCall' : apiCall})
+    else:
+        return render(request, 'home.html', {'defaultMessage' : "Enter a ticker symbol above..."})
 
 
 
@@ -25,3 +27,7 @@ def portfolio(request):
        
        
     return render(request, 'portfolio.html', {'portfolio' : portfolio})
+
+def buySell(request):
+
+    return render(request, 'buySell.html')
