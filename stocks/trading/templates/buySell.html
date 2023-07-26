@@ -6,14 +6,14 @@
 
 <H1>Buy & Sell Stocks</H1>
 
-<form action = "buySell" class= "d-flex" method = "POST" >
+<form action = "buy" class= "d-flex" method = "POST" >
         {% csrf_token %}
         <input type = "text" name = "asset">
         <input type = "quantity" name = "quantity">
         <button class="btn btn-outline-success" type="submit">BUY</button>
 </form>
 
-<form action = "sellBuy" class= "d-flex" method = "POST" >
+<form action = "sell" class= "d-flex" method = "POST" >
         {% csrf_token %}
         <input type = "text" name = "asset">
         <input type = "quantity" name = "quantity">

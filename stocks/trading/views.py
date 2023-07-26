@@ -29,7 +29,7 @@ def portfolio(request):
        
     return render(request, 'portfolio.html', {'portfolio' : portfolio})
 
-def buySell(request):
+def buy(request):
     if request.method == 'POST':
         obj, created = Position.objects.get_or_create(asset = request.POST.get("asset"))
         purchasedAmount = request.POST.get("quantity")
@@ -49,7 +49,7 @@ def buySell(request):
     else:
         return render(request, 'buySell.html', {})
     
-def sellBuy(request):
+def sell(request):
     if request.method == 'POST':
         obj, created = Position.objects.get_or_create(asset = request.POST.get("asset"))
         soldAmount = int(request.POST.get("quantity"))
