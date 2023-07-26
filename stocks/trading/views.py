@@ -20,6 +20,7 @@ def home (request):
 
 def portfolio(request):
     balance = Balance.objects.get(pk=1).cash
+    gainLoss = balance - 500000
     portfolio = Position.objects.all()
     for stock in portfolio:
        stock_data = yahooFinance.Ticker(stock.asset)
@@ -28,7 +29,7 @@ def portfolio(request):
        stock.value = stock_price * stock.quantity
        
        
-    return render(request, 'portfolio.html', {'portfolio' : portfolio, 'balance': balance})
+    return render(request, 'portfolio.html', {'portfolio' : portfolio, 'balance': balance, 'gainLoss': gainLoss})
 
 def buy(request):
     balance = Balance.objects.get(pk=1)
@@ -60,19 +61,23 @@ def buy(request):
         return render(request, 'buySell.html', {})
     
 def sell(request):
+    balance = Balance.objects.get(pk=1)
     if request.method == 'POST':
         obj, created = Position.objects.get_or_create(asset = request.POST.get("asset"))
         soldAmount = int(request.POST.get("quantity"))
         previousAmount = int(obj.quantity)
-        print(soldAmount)
-        print(previousAmount)
+        soldAsset = obj.asset
+        stockData = yahooFinance.Ticker(soldAsset)
+        priceCheck = stockData.info['currentPrice']
+        gainAmount = int(priceCheck) * int(soldAmount)
+        
         if previousAmount == soldAmount:
             obj.delete()
+            balance.cash = (int(balance.cash) + gainAmount)
+            balance.save()
             return redirect('portfolio')
         
         elif previousAmount < soldAmount:
-            print(soldAmount)
-            print(previousAmount)
             errorMessage = "quantityError"
             return render(request, 'buySell.html', {'errorMessage' : errorMessage, 'previousAmount': previousAmount})
 
@@ -81,6 +86,8 @@ def sell(request):
         else:
             obj.quantity -= int(soldAmount)
             obj.save()
+            balance.cash = (int(balance.cash) + gainAmount)
+            balance.save()
             return redirect('portfolio')
 
         
