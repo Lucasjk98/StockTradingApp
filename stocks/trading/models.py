@@ -18,6 +18,8 @@ class Transaction(models.Model):
 
 
 class Balance(models.Model):
-    cash = models.IntegerField(default=500)
+    cash = models.IntegerField(default=500000)
+
+    
 
     

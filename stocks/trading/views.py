@@ -19,6 +19,7 @@ def home (request):
 
 
 def portfolio(request):
+    balance = Balance.objects.get(pk=1).cash
     portfolio = Position.objects.all()
     for stock in portfolio:
        stock_data = yahooFinance.Ticker(stock.asset)
@@ -27,14 +28,23 @@ def portfolio(request):
        stock.value = stock_price * stock.quantity
        
        
-    return render(request, 'portfolio.html', {'portfolio' : portfolio})
+    return render(request, 'portfolio.html', {'portfolio' : portfolio, 'balance': balance})
 
 def buy(request):
+    balance = Balance.objects.get(pk=1)
     if request.method == 'POST':
         obj, created = Position.objects.get_or_create(asset = request.POST.get("asset"))
         purchasedAmount = request.POST.get("quantity")
+        purchasedAsset = obj.asset
+        stockData = yahooFinance.Ticker(purchasedAsset)
+        priceCheck = stockData.info['currentPrice']
+        spendAmount = int(priceCheck) * int(purchasedAmount)
+        
         if obj.quantity:
             obj.quantity += int(purchasedAmount)
+            balance.cash = (int(balance.cash) - spendAmount)
+            balance.save()
+
         else:
             obj.quantity = purchasedAmount
 
