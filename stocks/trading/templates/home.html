@@ -9,9 +9,13 @@
         please try again...
     {% else %}
 
-        <h1>{{apiCall.info.longName}}</h1><br/>
+        <h1>{{apiCall.info.longName}} </h1><br/>
         Ticker Symbol: {{apiCall.underlyingSymbol}}<br/>
         Current Price: {{apiCall.currentPrice}}<br/>
+        {{chart_html|safe}}
+        
+
+
         
     {% endif %}
 {% else %}
