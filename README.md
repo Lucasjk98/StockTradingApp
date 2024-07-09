@@ -1,4 +1,4 @@
-# Bootcamp Project 4
+# Stock Trading App
 
 ###### Lucas Jimenez
 
